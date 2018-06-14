@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Page Title</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- <link rel="stylesheet" type="text/css" media="screen" href="main.css" /> -->
+    <!-- <script src="main.js"></script> -->
+</head>
+<style>
+    .upload{
+        position: relative;
+        width: 150px;
+        height: 150px;
+        border: 1px solid grey
+    }
+    .upload__file-list{
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        opacity: 0;
+    }
+    .upload__img-display{
+        top:0;
+        left:0;
+        width: 100%;
+        height: 100%;
+    }
+</style>
+<body>
+    <div class="upload">
+        <input type="file" class="upload__file-list" multiple>
+        <img src="" class="upload__img-display">
+    </div>
+    
+    <div class="progress"></div>
+</body>
+<script>
+    var fileList = document.querySelector('.upload__file-list');
+    var progress = document.querySelector('.progress');
+    fileList.addEventListener('change',function(e){
+        var file = e.target.files[0];
+        console.log(file)
+        var reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = function(){
+            document.querySelector('.upload__img-display').src = reader.result;
+        }
+        reader.onprogress = function(e){
+            if(e.lengthComputable){
+                progress.innerHTML = e.loaded + '/'+ e.total;
+            }
+        }
+    })
+</script>
+</html>

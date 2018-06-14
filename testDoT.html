@@ -1,0 +1,62 @@
+<html>
+	<head>
+	<script id='tpl' type="x-dot-template">
+		<h1>{{=it.title}}</h1>
+		<h4>{{=it.name}}</h4>
+		<select name="" id="">
+			{{~it.arr :val:index}}
+				<option value="{{!index}}">{{!val}}</option>
+			{{~}}
+		</select>
+		{{? it.condition==1}}
+		<div>条件1</div>
+		{{??}}
+		<div>条件2</div>
+		{{?}}
+		{{##def.newtpl : <h5>这是编译时定义的模板,<span>{{=def.a}},{{=def.b}}</span></h5> #}}
+		{{#def.newtpl}}
+	</script>
+	<script src="./doT.js" type="text/javascript"></script>
+	</head>
+	<body>
+		<div id="content"></div>
+		<div id="contentcustom"></div>
+		<button class="btn">改变数据</button>
+	</body>
+
+	<script type="text/javascript">
+		doT.templateSettings = {
+		  evaluate:    /\{\{([\s\S]+?)\}\}/g,
+		  interpolate: /\{\{=([\s\S]+?)\}\}/g,
+		  encode:      /\{\{!([\s\S]+?)\}\}/g,
+		  use:         /\{\{#([\s\S]+?)\}\}/g,
+		  define:      /\{\{##\s*([\w\.$]+)\s*(\:|=)([\s\S]+?)#\}\}/g,
+		  conditional: /\{\{\?(\?)?\s*([\s\S]*?)\s*\}\}/g,
+		  iterate:     /\{\{~\s*(?:\}\}|([\s\S]+?)\s*\:\s*([\w$]+)\s*(?:\:\s*([\w$]+))?\s*\}\})/g,
+		  varname: 'it',
+		  strip: true,
+		  append: false,
+		  selfcontained: false
+		};
+		var tpl = document.querySelector('#tpl').text;
+		var def = {
+			a : 1,
+			b : 2
+		};
+		var data = {
+			title: "My title",
+			name: "My name",
+			arr:['苹果','香蕉','惊了'],
+			condition:1
+		};
+		var pagefn = doT.template(tpl, undefined, def);
+		document.getElementById('content').innerHTML = pagefn(data);
+		var btn = document.querySelector('.btn');
+		btn.addEventListener('click',function(){
+			data.title = '改变数据';
+			console.log(data)
+			document.querySelector('#content').innerHTML = pagefn(data)
+		})
+	</script>
+
+</html>
